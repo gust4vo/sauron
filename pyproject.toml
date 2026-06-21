@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sauron"
+version = "0.1.0"
+description = "CLI tool for software repository mining and maintenance analysis"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "typer[all]>=0.12",
+    "rich>=13",
+    "pydriller>=2.6",
+    "PyGithub>=2.3",
+    "lizard>=1.17",
+    "radon>=6",
+    "pandas>=2.2",
+    "matplotlib>=3.8",
+    "gitpython>=3.1",
+]
+
+[project.scripts]
+sauron = "sauron.main:app"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "ruff>=0.4",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sauron*"]
+
+[tool.ruff]
+line-length = 99
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
