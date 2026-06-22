@@ -34,6 +34,7 @@ class OutputFormat(str, Enum):
     terminal = "terminal"
     csv = "csv"
     json = "json"
+    chart = "chart"
 
 
 # ── Commands ──────────────────────────────────────────────────────────────────
@@ -215,6 +216,11 @@ def analyze(
     elif output_format == OutputFormat.json:
         out = export_json(result, output_dir)
         _err.print(f"[green]JSON report written to {out}[/green]")
+    elif output_format == OutputFormat.chart:
+        from sauron.reporters.chart_reporter import export_hotspot_chart
+
+        out = export_hotspot_chart(result, output_dir, top_n=top_n)
+        _err.print(f"[green]Hotspot chart written to {out}[/green]")
 
     # ── Cleanup ───────────────────────────────────────────────────────────
     if cloned_dir:
