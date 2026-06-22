@@ -36,6 +36,7 @@ def analyze_git_history(
     file_data: dict[str, FileMetrics] = {}
     commit_files: list[list[str]] = []  # list of files changed per commit
     author_data: dict[str, AuthorMetrics] = {}
+    author_files: dict[str, set[str]] = {}  # distinct paths touched per author
 
     kwargs: dict = {"path_to_repo": repo_path}
     if since:
@@ -53,6 +54,7 @@ def analyze_git_history(
                 name=commit.author.name,
                 email=commit.author.email or "",
             )
+            author_files[author_key] = set()
         author_data[author_key].commit_count += 1
 
         # ── Per-file metrics ───────────────────────────────────────────────
@@ -77,12 +79,16 @@ def analyze_git_history(
 
             author_data[author_key].lines_added += added
             author_data[author_key].lines_removed += removed
-            author_data[author_key].files_touched += 1
+            author_files[author_key].add(path)
 
             changed_paths.append(path)
 
         if len(changed_paths) > 1:
             commit_files.append(changed_paths)
+
+    # ── Distinct files touched per author ──────────────────────────────────
+    for key, paths in author_files.items():
+        author_data[key].files_touched = len(paths)
 
     # ── Logical coupling ───────────────────────────────────────────────────
     coupling_counter: Counter = Counter()
