@@ -22,6 +22,23 @@ def _extract_repo_name(repo_url: str) -> Optional[str]:
     return None
 
 
+def _count_reopened(issues: list) -> int:
+    """
+    Count how many issues were reopened at least once.
+
+    Inspects each issue's event timeline for a ``reopened`` event.  Issues whose
+    events cannot be fetched are skipped rather than aborting the whole metric.
+    """
+    reopened = 0
+    for issue in issues:
+        try:
+            if any(event.event == "reopened" for event in issue.get_events()):
+                reopened += 1
+        except GithubException:
+            continue
+    return reopened
+
+
 def analyze_github(
     repo_url: str,
     github_token: Optional[str] = None,
@@ -89,7 +106,7 @@ def analyze_github(
                 else 0.0
             ),
             long_running_count=long_running,
-            reopened_count=0,
+            reopened_count=_count_reopened(real_issues),
         )
     except GithubException:
         pass
