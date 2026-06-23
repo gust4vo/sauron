@@ -57,7 +57,7 @@ e evita que a frequência de mudanças domine completamente o score.
 
 **O que é:** percentual dos commits de um arquivo que também tocaram outro arquivo específico.
 
-$$\text{coupling\_degree} = \frac{\text{co-changes}}{\min(\text{commits}_A,\ \text{commits}_B)}$$
+$$\text{coupling\_degree} = \frac{\text{co-changes}}{\min(\text{commits}\_A,\ \text{commits}_B)}$$
 
 O denominador usa o **mínimo** dos dois para normalizar pelo arquivo menos modificado.
 Isso evita que um arquivo muito ativo dilua artificialmente o grau de acoplamento.
